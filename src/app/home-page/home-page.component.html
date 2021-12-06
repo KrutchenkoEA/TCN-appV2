@@ -1,0 +1,76 @@
+<div class="form-log">
+  <form class="card" [formGroup]="form" (ngSubmit)="submit()">
+    <h1>Home page</h1>
+
+    <div [ngClass]="{invalid: smth1?.invalid && smth1?.touched}"
+         class="form-control">
+      <p>
+        Предыдущие показания: {{indications[0]}}
+        <span>, Тариф: {{tarif[0]}}</span>
+      </p>
+      <label for="smth1">smth1:</label>
+      <input type="smth1" id="smth1" formControlName="smth1">
+      <div *ngIf="smth1?.invalid && (smth1?.dirty || smth1?.touched)" class="validation">
+        <div *ngIf="smth1?.errors?.pattern">
+          Поле должно состоять из цифр
+        </div>
+      </div>
+      <p *ngIf="smth1?.value">
+        К оплате по тарифу: {{tarif[0]}} * {{smth1?.value}} = {{conVal(tarif[0], smth1?.value)}}
+      </p>
+    </div>
+
+
+
+    <div [ngClass]="{invalid: smth2?.invalid && smth2?.touched}"
+         class="form-control">
+      <p>
+        Предыдущие показания: {{indications[1]}}
+        <span>, Тариф: {{tarif[1]}}</span>
+      </p>
+      <label for="smth2">smth2:</label>
+      <input type="smth2" id="smth2" formControlName="smth2">
+      <div *ngIf="smth2?.invalid && (smth2?.dirty || smth2?.touched)" class="validation">
+        <div *ngIf="smth2?.errors?.pattern">
+          Поле должно состоять из цифр
+        </div>
+      </div>
+      <p *ngIf="smth2?.value">
+        К оплате по тарифу: {{tarif[1]}} * {{smth2?.value}} = {{conVal(tarif[1], smth2?.value)}}
+      </p>
+    </div>
+
+
+
+    <div [ngClass]="{invalid: smth3?.invalid && smth3?.touched}"
+         class="form-control">
+      <p>
+        Предыдущие показания: {{indications[2]}}
+        <span>, Тариф: {{tarif[2]}}</span>
+      </p>
+      <label for="smth3">smth3:</label>
+      <input type="smth3" id="smth3" formControlName="smth3">
+      <div *ngIf="smth3?.invalid && (smth3?.dirty || smth3?.touched)" class="validation">
+        <div *ngIf="smth3?.errors?.pattern">
+          Поле должно состоять из цифр
+        </div>
+        <div *ngIf="smth3?.value < indications[2]">
+          sdas
+        </div>
+      </div>
+      <p *ngIf="smth3?.value">
+        К оплате по тарифу: {{tarif[2]}} * {{smth3?.value}} = {{conVal(tarif[2], smth3?.value)}}
+      </p>
+    </div>
+
+
+
+    <button
+      class="btn-primary"
+      type="submit"
+      [disabled]="form.invalid || submitted"
+    >Send</button>
+
+  </form>
+
+</div>

@@ -1,0 +1,48 @@
+<div class="form-log">
+  <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="!emailSend; else checkEmail">
+    <h1>Страница регистрации</h1>
+
+    <div class="log">
+      <div [ngClass]="{invalid: email?.invalid && email?.touched}"
+           class="form-control">
+        <label for="email">Email:</label>
+        <input type="email" id="email" formControlName="email">
+        <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="validation">
+          <div *ngIf="email?.errors?.required">
+            Поле не может быть пустым
+          </div>
+          <div *ngIf="email?.errors?.email">
+            Введите корректный email-адресс
+          </div>
+        </div>
+      </div>
+
+      <div [ngClass]="{invalid: password?.invalid && password?.touched}"
+           class="form-control">
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" formControlName="password">
+        <div *ngIf="password?.invalid && (password?.dirty || password?.touched)" class="validation">
+          <div *ngIf="password?.errors?.required">
+            Поле не может быть пустым
+          </div>
+          <div *ngIf="password?.errors?.minlength">
+            Минимальная длина пароля: {{password?.errors?.minlength.requiredLength}}
+            Сейчас: {{password?.errors?.minlength.actualLength}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button
+      class="btn-log"
+      type="submit"
+      [disabled]="form.invalid || submitted"
+    >Зарегистрироваться</button>
+
+  </form>
+
+  <ng-template class="template" #checkEmail>
+    <p>Проверьте почту {{this.form.value.email}}, для завершения регистрации</p>
+  </ng-template>
+
+</div>

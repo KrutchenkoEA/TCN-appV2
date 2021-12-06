@@ -1,0 +1,52 @@
+<form class="form-log" [formGroup]="form" (ngSubmit)="submit()">
+  <h1>Авторизация</h1>
+
+<!--  <div class="alert alert-danger" *ngIf="auth.error$ | async as error">-->
+<!--    {{error}}-->
+<!--  </div>-->
+
+<!--  <div class="alert alert-light" *ngIf="message">-->
+<!--    {{message}}-->
+<!--  </div>-->
+
+  <div class="log">
+    <div class="form-control">
+      <label for="email">Email: </label>
+      <input type="email" id="email" formControlName="email">
+    </div>
+
+    <div class="form-control">
+      <label for="password">Пароль: </label>
+      <input type="password" id="password" formControlName="password">
+    </div>
+
+    <button
+      class="btn-log"
+      type="submit"
+      [disabled]="form.invalid || submitted"
+    >Войти</button>
+  </div>
+
+  <button
+    class="btn-log"
+    type="button"
+    (click)="auth.loginWithGoogle()"
+  >Авторизация через Google
+  </button>
+
+  <button
+    class="btn-log"
+    type="button"
+    routerLink="forgot-password"
+  >Забыли пароль?
+  </button>
+
+  <button
+    class="btn-log"
+    type="button"
+    routerLink="register"
+  >Регистрация
+  </button>
+
+</form>
+
