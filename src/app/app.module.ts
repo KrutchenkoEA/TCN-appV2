@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {NgModule, Provider} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {AppRoutingModule} from './app-routing.module';
@@ -14,6 +14,7 @@ import {LoginPageComponent} from './login-page/login-page.component';
 import {RegisterPageComponent} from './login-page/register-page/register-page.component';
 import {ForgotPasswordPageComponent} from './login-page/forgot-password-page/forgot-password-page.component';
 import {AuthService} from "./shared/auth.service";
+
 
 @NgModule({
   declarations: [

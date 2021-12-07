@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
-import {IGUser, IUser} from "../../shared/interfaces";
+import {I2User} from "../../shared/interfaces";
 import {AuthService} from "../../shared/auth.service";
 
 @Component({
@@ -53,12 +53,12 @@ export class RegisterPageComponent implements OnInit {
     this.submitted = true
     this.emailSend = true
 
-    const user: IUser = {
+    const user: I2User = {
       email: this.form.value.email,
       password: this.form.value.password
     }
 
-    this.auth.register(user).then(() => {
+    this.auth.register(user.email, user.password).then(() => {
       this.form.reset()
       this.submitted = false
     })

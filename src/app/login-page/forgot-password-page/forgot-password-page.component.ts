@@ -9,8 +9,9 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 })
 export class ForgotPasswordPageComponent implements OnInit {
 
-  passSend: boolean = false
+  passSend = false
   email!: FormControl
+
 
   constructor(
     public auth: AuthService,
@@ -20,15 +21,11 @@ export class ForgotPasswordPageComponent implements OnInit {
     this.email = new FormControl('', [Validators.email])
 
   }
-
-  send() {
-    console.log('qqq')
-    console.log(this.email.value)
-
+  submit() {
+    console.log('this.form.value', this.email.value)
     this.passSend = true
     this.auth.sendPassVer(this.email.value)
   }
-
 
 }
 

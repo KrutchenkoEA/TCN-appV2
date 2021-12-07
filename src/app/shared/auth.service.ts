@@ -1,13 +1,17 @@
 import {Injectable, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {AngularFireAuth} from "@angular/fire/compat/auth";
-import {from, Observable, Subject, throwError} from "rxjs";
 import {IUser} from "./interfaces";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import firebase from "firebase/compat/app";
-import {HttpErrorResponse} from "@angular/common/http";
+
 import auth = firebase.auth;
+import {HttpErrorResponse} from "@angular/common/http";
+import {Observable, throwError} from "rxjs";
+import {environment} from "../../environments/environment";
 import {catchError, tap} from "rxjs/operators";
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -15,65 +19,72 @@ import {catchError, tap} from "rxjs/operators";
 export class AuthService implements OnInit{
 
   user!: IUser
-  userState: any
-  public error$: Subject<string> = new Subject<string>()
+  userDate: any
+
+  actionCodeSettings = {
+    url: 'https://www.example.com/?email=user@example.com',
+    handleCodeInApp: true
+  };
+
 
   constructor(
     public afAuth: AngularFireAuth,
     private router: Router,
     public afs: AngularFirestore,
-  )  {  }
+  )  { }
+
 
   ngOnInit(): void {
     this.afAuth.authState.subscribe(user => {
       if (user) {
-        localStorage.setItem('user', JSON.stringify(this.userState))
-        JSON.parse(<string>localStorage.getItem('user'))
+        localStorage.setItem('user', JSON.stringify(this.userDate))
+        // JSON.parse(<string>localStorage.getItem('user'))
       } else {
         localStorage.clear()
       }
     })
   }
 
-  //   async login(user: IUser) {
-  //   const res = await this.afAuth.signInWithEmailAndPassword(user.email, user.password)
-  //     .then(res => console.log('Login complete', res))
-  //     .catch(() => this.handleError.bind(this))
-  //   await this.setUserData(user)
-  //   await this.router.navigate(['/home'])
-  // }
-
-    login(user: IUser): Observable<any> {
-      const res$ = from(this.afAuth.signInWithEmailAndPassword(user.email, user.password))
-        .pipe(tap(this.setUserData(user))
-          ,catchError(this.handleError.bind(this)))
-      console.log('Login complete', res$)
-
-      return res$
-    }
-
-  async register(user: IUser)  {
-    const res = await this.afAuth.createUserWithEmailAndPassword(user.email, user.password)
-      .then(res => console.log('User create', res))
-    await this.setUserData(user)
-    const res2 = await this.afAuth.sendSignInLinkToEmail(user.email, {url:'www.www'})
-      .then(res2 => console.log('Send link to email', res2))
+  async login(email: string, password: string) {
+    await this.afAuth.signInWithEmailAndPassword(email, password)
+      .then(res => {
+        // this.setUserData(res.user)
+        console.log('login', res.user)
+      })
+      .catch(err => console.log('err',err))
   }
 
-  async sendPassVer(email: string) {
-    const res = await this.afAuth.sendPasswordResetEmail(email, null)
-      .then(res => console.log('Login complete', res))
-  }
-
-  async logout() {
+  async logout(){
     await this.afAuth.signOut()
     localStorage.removeItem('user')
     await this.router.navigate(['/login'])
+    console.log('logout', this.userDate)
+  }
+
+
+
+  async register(email: string, password: string)  {
+    await this.afAuth.createUserWithEmailAndPassword(email, password)
+      .then(res => {
+        // this.setUserData(res.user)
+        console.log('User create', res)
+      })
+      .catch(err => console.log('err',err))
+    await this.afAuth.sendSignInLinkToEmail(email, {url:'www.www'})
+      .then(res=> console.log('Send link to email', res))
+      .catch(err => console.log('err',err))
+  }
+
+  async sendPassVer(email: string) {
+    await this.afAuth.sendPasswordResetEmail(email, this.actionCodeSettings)
+      .then(res => console.log('Login complete', res))
+      .catch(err => console.log('err',err))
   }
 
   get isAuthentificated(): boolean {
     const user = JSON.parse(<string>localStorage.getItem('user'))
-    return (user !== null && user.email_verified !== false)
+    // return (user !== null && user.emailVerified !== false)
+    return true
   }
 
   async loginWithGoogle() {
@@ -84,26 +95,31 @@ export class AuthService implements OnInit{
 
   setUserData(user: IUser) {
     const userState: IUser = {
+      displayName: user.displayName,
       email: user.email,
-      password: user.password,
+      photoURL: user.photoURL,
+      emailVerified: user.emailVerified,
+      uid: user.uid,
     }
     return console.log('userState', userState)
   }
 
-  private handleError(error: HttpErrorResponse) {
-    const {message} = error.error.error
-    switch (message) {
-      case 'INVALID_EMAIL':
-        this.error$.next('Invalid Email')
-        break
-      case 'INVALID_PASSWORD':
-        this.error$.next('Invalid Password')
-        break
-      case 'EMAIL_NOT_FOUND':
-        this.error$.next('Email not found')
-        break
-    }
-    return throwError(error)
-  }
+
+  // login(user: IUser): Observable<any> {
+  //   return this.http.post(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.firebaseConfig.apiKey}`, user)
+  //     .pipe(
+  //       tap(this.setToken),
+  //       catchError(this.handleError.bind(this))
+  //     );
+  // }
 
 }
+
+
+
+
+
+
+
+
+

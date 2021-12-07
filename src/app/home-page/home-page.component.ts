@@ -47,14 +47,14 @@ export class HomePageComponent implements OnInit {
 
 
   submit() {
-    console.log('this.form.value', this.form.value)
-    if (this.form.invalid) {
-      return
-    }
-
-    this.submitted = true
-    this.form.reset()
-    this.submitted = false
+    // console.log('this.form.value', this.form.value)
+    // if (this.form.invalid) {
+    //   return
+    // }
+    //
+    // this.submitted = true
+    // this.form.reset()
+    // this.submitted = false
 
   }
 

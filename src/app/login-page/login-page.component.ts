@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
+import {Component, OnInit} from '@angular/core';
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Params, Router} from "@angular/router";
-import {IGUser, IUser} from "../shared/interfaces";
+import {I2User} from "../shared/interfaces";
 import {AuthService} from "../shared/auth.service";
+import {AuthGService} from "../shared/auth-g.service";
 
 @Component({
   selector: 'app-main-page',
@@ -19,6 +20,7 @@ export class LoginPageComponent implements OnInit {
 
   constructor(
     public auth: AuthService,
+    public authG: AuthGService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -44,25 +46,17 @@ export class LoginPageComponent implements OnInit {
 
     this.submitted = true
 
-    const user: IUser = {
+    const user: I2User = {
       email: this.form.value.email,
       password: this.form.value.password
     }
 
-    // this.auth.login(user).then(() => {
-    //   this.form.reset()
-    //   this.router.navigate(['/home'])
-    //   this.submitted = false
-    // }).catch((err) => {
-    //   console.log(err)
-    //   this.submitted = false
-    // })
-
-    this.auth.login(user).subscribe(() => {
+    this.auth.login(user.email, user.password).then(() => {
       this.form.reset()
       this.router.navigate(['/home'])
       this.submitted = false
-    }, () => {
+    }).catch((err) => {
+      console.log(err)
       this.submitted = false
     })
   }
